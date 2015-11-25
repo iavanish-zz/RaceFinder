@@ -8,14 +8,14 @@ public aspect RaceDetector {
 
 	Map <String, Lock> locksOnSharedVariables = new HashMap <String, Lock> ();
 	
-	private final class ThreadLocalExtension extends ThreadLocal {
+	private final class GetThreadLocalObject extends ThreadLocal {
 		public synchronized Lock initialValue() {
 			Lock locks = new Lock();
 			return locks;
 		}
 	}
 
-	ThreadLocal locksHeldByThreads = new ThreadLocalExtension();
+	ThreadLocal locksHeldByThreads = new GetThreadLocalObject();
 
 	before(): Pointcuts.sharedVariableRead() && Pointcuts.scope() {
 		
@@ -34,8 +34,7 @@ public aspect RaceDetector {
 					}
 				}
 				if(temp.locks.size() == 0) {
-					System.err.println("Race Detected at: " + thisJoinPoint.getSourceLocation());
-					//	System.exit(1);
+					throw new RaceDetectedException(thisJoinPoint.getSourceLocation().toString());
 				}
 				else {
 					locksOnSharedVariables.put(variableName, temp);
@@ -62,8 +61,7 @@ public aspect RaceDetector {
 					}
 				}
 				if(temp.locks.size() == 0) {
-					System.err.println("Race Detected at: " + thisJoinPoint.getSourceLocation());
-					//	System.exit(1);
+					throw new RaceDetectedException(thisJoinPoint.getSourceLocation().toString());
 				}
 				else {
 					locksOnSharedVariables.put(variableName, temp);

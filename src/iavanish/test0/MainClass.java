@@ -1,4 +1,4 @@
-package iavanish.test1;			
+package iavanish.test0;			
 
 public class MainClass {
 
