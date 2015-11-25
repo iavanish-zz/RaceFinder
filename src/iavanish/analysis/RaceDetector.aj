@@ -34,7 +34,7 @@ public aspect RaceDetector {
 					}
 				}
 				if(temp.locks.size() == 0) {
-					throw new RaceDetectedException(thisJoinPoint.getSourceLocation().toString());
+					throw new RaceDetectedException(thisJoinPoint.getSourceLocation());
 				}
 				else {
 					locksOnSharedVariables.put(variableName, temp);
@@ -61,7 +61,7 @@ public aspect RaceDetector {
 					}
 				}
 				if(temp.locks.size() == 0) {
-					throw new RaceDetectedException(thisJoinPoint.getSourceLocation().toString());
+					throw new RaceDetectedException(thisJoinPoint.getSourceLocation());
 				}
 				else {
 					locksOnSharedVariables.put(variableName, temp);
@@ -79,19 +79,10 @@ public aspect RaceDetector {
 		}
 		
 	}
-	
-	after(Object lock): lock() && args(lock) && Pointcuts.scope() {
-		
-		synchronized(this) {
-			System.out.println(Thread.currentThread().getName() + " has acquired a lock on " + lock);
-		}
-		
-	}
 
 	after(Object lock): unlock() && args(lock) && Pointcuts.scope() {
 	
 		synchronized(this) {
-			System.out.println(Thread.currentThread().getName() + " has released a lock on " + lock);
 			Lock locksHeld = (Lock)locksHeldByThreads.get();
 			locksHeld.locks.remove(lock);
 		}
