@@ -1,4 +1,4 @@
-package iavanish.test1;
+package iavanish;
 
 public class SimpleThreads implements Runnable {
 
@@ -10,7 +10,6 @@ public class SimpleThreads implements Runnable {
 	}
 	
 	public void run() {
-		
 		if(threadName.equals("thread1")) {
 			TargetClass.incrementSynchronized();
 			TargetClass.incrementUnsynchronized();
@@ -19,7 +18,6 @@ public class SimpleThreads implements Runnable {
 			TargetClass.decrementSynchronized();
 			TargetClass.decrementUnsynchronized();
 		}
-		
 	}
 	
 	public void start() {
