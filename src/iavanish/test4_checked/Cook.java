@@ -13,7 +13,9 @@ public class Cook implements Runnable{
 	public Cook(Kitchen kit) {
 		this.kitchen=kit;
 		dish=new Dish();
-		name="Cook"+(++count);
+		synchronized(Cook.class) {
+			name="Cook"+(++count);
+		}
 	}
 	
 	
@@ -69,7 +71,7 @@ public class Cook implements Runnable{
 			}
 			waitAtStore=System.currentTimeMillis()-waitAtStore;
 			kitchen.store.consumeIngredients(dish.recipe.getIngredient1(), dish.recipe.getIngredient2());
-			Thread.sleep(1000);
+			Thread.sleep(100);
 			//System.out.println(name+":I collected I am going out");
 			
 		}

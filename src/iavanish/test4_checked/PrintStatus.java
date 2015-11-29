@@ -13,7 +13,9 @@ public class PrintStatus {
 	
 	
 	public static PrintStatus getInstance(){
-		return obj;
+		synchronized(PrintStatus.class) {
+			return obj;
+		}
 	}
 
 

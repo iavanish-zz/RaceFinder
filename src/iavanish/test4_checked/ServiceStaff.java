@@ -11,7 +11,9 @@ public class ServiceStaff implements Runnable{
 	
 	public ServiceStaff(Kitchen kit) {
 		this.kitchen=kit;
-		this.name="SS"+(++count);
+		synchronized(ServiceStaff.class) {
+			this.name="SS"+(++count);
+		}
 	}
 	
 	public void run() {
@@ -19,7 +21,7 @@ public class ServiceStaff implements Runnable{
 		PrintStatus p=PrintStatus.getInstance();
 		while(true){
 			try {
-				Thread.sleep(50000);
+				Thread.sleep(500);
 								
 				if(random.nextBoolean())
 					cleanCounter();
@@ -42,7 +44,7 @@ public class ServiceStaff implements Runnable{
 			waitAtCounter=System.currentTimeMillis()-waitAtCounter;
 			if(kitchen.table.isDirty()){
 				//System.out.println(name+":I am cleaning now");
-				Thread.sleep(2000);
+				Thread.sleep(200);
 				kitchen.table.setDirty(false);
 				kitchen.table.notifyAll();
 				//System.out.println(name+":I finished cleaning");
