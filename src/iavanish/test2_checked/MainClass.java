@@ -1,4 +1,4 @@
-package iavanish.test1;			
+package iavanish.test2_checked;			
 
 public class MainClass {
 
@@ -17,8 +17,10 @@ public class MainClass {
 			e.printStackTrace();
 		}
 		
-		System.out.println("sharedUnsynchronized: " + TargetClass.sharedUnsynchronized);
-		System.out.println("sharedSynchronized: " + TargetClass.sharedSynchronized);
+		synchronized(TargetClass.class) {
+			System.out.println("sharedUnsynchronized: " + TargetClass.sharedUnsynchronized);
+			System.out.println("sharedSynchronized: " + TargetClass.sharedSynchronized);
+		}
 		
 	}
 

@@ -17,10 +17,8 @@ public class MainClass {
 			e.printStackTrace();
 		}
 		
-		synchronized(TargetClass.class) {
-			System.out.println("sharedUnsynchronized: " + TargetClass.sharedUnsynchronized);
-			System.out.println("sharedSynchronized: " + TargetClass.sharedSynchronized);
-		}
+		System.out.println("sharedUnsynchronized: " + TargetClass.sharedUnsynchronized);
+		System.out.println("sharedSynchronized: " + TargetClass.sharedSynchronized);
 		
 	}
 
