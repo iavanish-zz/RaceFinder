@@ -1,4 +1,4 @@
-package iavanish.test1;
+package iavanish.test1_checked;
 
 public class MainClass {
 

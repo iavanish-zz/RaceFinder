@@ -30,51 +30,57 @@ public aspect RaceDetector {
 		synchronized(this) {
 			
 			String variableName = thisJoinPointStaticPart.getSignature().toLongString();
-			Lock locksHeldByThread = (Lock)locksHeldByThreads.get();
 			
-			if(!locksOnSharedVariables.containsKey(variableName)) {
-				//	first read/write
-				locksOnSharedVariables.put(variableName, locksHeldByThread);
-			}
+			if(!variableName.equals("public static final java.io.PrintStream java.lang.System.out")) {
 			
-			else {
+				Lock locksHeldByThread = (Lock)locksHeldByThreads.get();
 			
-				Lock locksOnSharedVariable = locksOnSharedVariables.get(variableName);
-				Lock temp = new Lock();
-				
-				for(Object l: locksOnSharedVariable.locks) {
-					if(locksHeldByThread.locks.contains(l)) {
-						//	finding intersection
-						temp.locks.add(l);
-					}
+				if(!locksOnSharedVariables.containsKey(variableName)) {
+					//	first read/write
+					locksOnSharedVariables.put(variableName, locksHeldByThread);
 				}
+			
+				else {
+			
+					Lock locksOnSharedVariable = locksOnSharedVariables.get(variableName);
+					Lock temp = new Lock();
 				
-				if(temp.locks.size() == 0) {
-				
-					//	intersection is empty, race possible
-					try {
-						throw new RaceDetectedException(thisJoinPoint.getSourceLocation());
+					for(Object l: locksOnSharedVariable.locks) {
+						if(locksHeldByThread.locks.contains(l)) {
+							//	finding intersection
+							temp.locks.add(l);
+						}
 					}
+				
+					if(temp.locks.size() == 0) {
+				
+						//	intersection is empty, race possible
+						try {
+							throw new RaceDetectedException(thisJoinPoint.getSourceLocation());
+						}
 					
-					catch(RaceDetectedException e) {
+						catch(RaceDetectedException e) {
 					
-						synchronized(detectedRaces) {
 							if(!detectedRaces.contains(e.toString())) {
 								//	check if we have already detected this race
 								detectedRaces.add(e.toString());
 								System.err.println("Race Detected at: " + e.toString());
 							}
-						}
+							else {
+								//	ignore
+							}
 						
+						}
+				
 					}
 				
-				}
+					else {
 				
-				else {
+						//	safe
+						locksOnSharedVariables.put(variableName, temp);
 				
-					//	safe
-					locksOnSharedVariables.put(variableName, temp);
-				
+					}
+					
 				}
 				
 			}
@@ -85,7 +91,65 @@ public aspect RaceDetector {
 	
 	before(): Pointcuts.sharedVariableWrite() && Pointcuts.scope() {
 		
-		
+		synchronized(this) {
+			
+			String variableName = thisJoinPointStaticPart.getSignature().toLongString();
+			
+			if(!variableName.equals("public static final java.io.PrintStream java.lang.System.out")) {
+			
+				Lock locksHeldByThread = (Lock)locksHeldByThreads.get();
+			
+				if(!locksOnSharedVariables.containsKey(variableName)) {
+					//	first read/write
+					locksOnSharedVariables.put(variableName, locksHeldByThread);
+				}
+			
+				else {
+			
+					Lock locksOnSharedVariable = locksOnSharedVariables.get(variableName);
+					Lock temp = new Lock();
+				
+					for(Object l: locksOnSharedVariable.locks) {
+						if(locksHeldByThread.locks.contains(l)) {
+							//	finding intersection
+							temp.locks.add(l);
+						}
+					}
+				
+					if(temp.locks.size() == 0) {
+					
+						//	intersection is empty, race possible
+						try {
+							throw new RaceDetectedException(thisJoinPoint.getSourceLocation());
+						}
+						
+						catch(RaceDetectedException e) {
+					
+							if(!detectedRaces.contains(e.toString())) {
+								//	check if we have already detected this race
+								detectedRaces.add(e.toString());
+								System.err.println("Race Detected at: " + e.toString());
+							}
+							else {
+								//	ignore
+							}
+						
+						}
+				
+					}
+				
+					else {
+				
+						//	safe
+						locksOnSharedVariables.put(variableName, temp);
+				
+					}
+				
+				}
+				
+			}
+			
+		}
 		
 	}
 	

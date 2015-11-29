@@ -1,4 +1,4 @@
-package iavanish.test1;
+package iavanish.test2_checked;
 
 public class SimpleThreads implements Runnable {
 

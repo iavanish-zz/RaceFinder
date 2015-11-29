@@ -9,7 +9,7 @@ public aspect Pointcuts {
 		(!within(iavanish.test3.*)) && 
 		(!within(iavanish.test4.*))) && 
 		((within(iavanish.test1_checked.*)) || 
-		(within(iavanish.test1updated_checked.*)) || 
+		(within(iavanish.test1_updated_checked.*)) || 
 		(within(iavanish.test2_checked.*)) || 
 		(within(iavanish.test3_checked.*)) || 
 		(within(iavanish.test4_checked.*))));

@@ -1,4 +1,4 @@
-package iavanish.test1;
+package iavanish.test2;
 	
 public class TargetClass {
 
@@ -6,14 +6,19 @@ public class TargetClass {
 	public static int sharedSynchronized;
 	
 	public static void incrementUnsynchronized() {
-		for(int i = 0; i < 100; i++) {
-			sharedUnsynchronized++;
+		TargetClass object = new TargetClass();
+		synchronized(object) {
+			for(int i = 0; i < 100; i++) {
+				sharedUnsynchronized++;
+			}
 		}
 	}
 	
 	public static void decrementUnsynchronized() {
-		for(int i = 0; i < 100; i++) {
-			sharedUnsynchronized--;
+		synchronized(TargetClass.class) {
+			for(int i = 0; i < 100; i++) {
+				sharedUnsynchronized--;
+			}
 		}
 	}
 	
